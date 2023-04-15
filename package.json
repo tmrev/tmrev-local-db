@@ -1,0 +1,22 @@
+{
+  "name": "tmrev-local-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmrev/tmrev-local-db.git"
+  },
+  "author": "Kegen Guyll",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmrev/tmrev-local-db/issues"
+  },
+  "homepage": "https://github.com/tmrev/tmrev-local-db#readme",
+  "dependencies": {
+    "mongodb": "^5.2.0"
+  }
+}
