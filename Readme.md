@@ -15,10 +15,14 @@ This is a docker-compose file to setup a local mongodb instance.
 enter this command in the root directory of the project
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 once completed you should enter this command next
+
+```bash
+npm install
+```
 
 ```bash
 node index.js
