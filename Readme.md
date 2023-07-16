@@ -1,14 +1,17 @@
 # Getting Started
+
 This is a docker-compose file to setup a local mongodb instance.
 
-### Recommend  
- - Its very recommended to have [MongoDB Compass](https://www.mongodb.com/try/download/compass) installed its a great tool provided by the MongoDB team
+### Recommend
+
+- Its very recommended to have [MongoDB Compass](https://www.mongodb.com/try/download/compass) installed its a great tool provided by the MongoDB team
 
 ### Must haves
- - Docker and Docker-Compose installed follow this guide
-   - [Linux](https://docs.docker.com/desktop/install/linux-install/)
-   - [Mac](https://docs.docker.com/desktop/install/mac-install/)
-   - [Windows](https://docs.docker.com/desktop/install/windows-install/)
+
+- Docker and Docker-Compose installed follow this guide
+  - [Linux](https://docs.docker.com/desktop/install/linux-install/)
+  - [Mac](https://docs.docker.com/desktop/install/mac-install/)
+  - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 ## Lets get Started
  - copy the same `cred.json` file that was used for [tmrev-api](https://github.com/tmrev/tmrev-api)
