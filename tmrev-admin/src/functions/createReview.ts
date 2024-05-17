@@ -4,12 +4,12 @@ import { initFirebase } from'./initFirebase'
 import { createIdTokenfromCustomToken }from'./exchangeCustomToken';
 
 
-const createReview = async (uid: string) => {
+const createReview = async (uid: string, movieId?: number) => {
   try {
     const TMREV_BASE_URL = process.env.TMREV_API_BASE_URL
     initFirebase()
 
-    const randomMovie = await getRandomMovie()
+    const movie = await getRandomMovie(movieId)
 
     const advancedScore = {
       acting: faker.datatype.number({ min: 1, max: 10 }),
@@ -28,10 +28,11 @@ const createReview = async (uid: string) => {
       advancedScore: advancedScore,
       notes: faker.lorem.sentences(),
       public: faker.datatype.boolean(),
-      tmdbID: randomMovie.id,
-      release_date: randomMovie.release_date,
+      tmdbID: movie.id,
+      release_date: movie.release_date,
       reviewedDate: faker.date.recent(30).toISOString().split('T')[0],
-      title: randomMovie.title,
+      title: movie.title,
+      moviePoster: movie.poster_path,
     };
 
     const token = await createIdTokenfromCustomToken(uid)

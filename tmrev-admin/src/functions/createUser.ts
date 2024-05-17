@@ -27,6 +27,11 @@ const createTmrevUser = async (numberOfReviews?: number) => {
 
     const token = await createIdTokenfromCustomToken(userRecord.uid)
 
+    const generatePhotoUrl = async () => {
+      const response = await axios.get('https://randomuser.me/api/?results=1')
+      return response.data.results[0].picture.thumbnail
+    }
+
     const user = {
       email,
       firstName,
@@ -37,7 +42,8 @@ const createTmrevUser = async (numberOfReviews?: number) => {
       bio: faker.lorem.sentence(),
       location: faker.address.city(),
       link: null,
-      uuid: userRecord.uid
+      uuid: userRecord.uid,
+      photoUrl: await generatePhotoUrl()
     }
 
     await axios.post(`${TMREV_BASE_URL}/user`, {...user}, {

@@ -1,6 +1,9 @@
+import CreateReviewDialog from "@/components/dialogs/createReviewDialog";
 import CreateUserDialog from "@/components/dialogs/createUserDialog";
+import CreateWatchedMoviesDialog from "@/components/dialogs/createWatchedMoviesDialog";
 import DeleteWarningDialog from "@/components/dialogs/deleteWarningDialog";
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import UpdateUserDialog from "@/components/dialogs/updateUserDialog";
+import { Button, CircularProgress, Snackbar, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import DataTable, { ExpanderComponentProps, TableColumn } from 'react-data-table-component';
@@ -10,7 +13,7 @@ interface Props {
   data: any[]
 }
 
-type DataRow = {
+export type DataRow = {
   _id: string
   firstName: string
   lastName: string
@@ -21,6 +24,7 @@ type DataRow = {
   followers: string[]
   bio: string
   link: null
+  photoUrl: string
 }
 
 type ReviewDataRow = {
@@ -55,6 +59,17 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
   const [selectedRows, setSelectedRows] = useState<ReviewDataRow[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [confirmModal, setConfirmModal] = useState<boolean>(false)
+  const [updateModal, setUpdateModal] = useState<boolean>(false)
+  const [copiedSuccess, setCopiedSuccess] = useState<boolean>(false)
+  const [createWatchedMoviesModal, setCreateWatchedMoviesModal] = useState<boolean>(false)
+
+  const fetchAuthToken = useCallback(async () => {
+    const token = await axios.get(`/api/auth/getAuthToken?uid=${data.uuid}`)
+    
+    return token.data.token as string
+  }, [data.uuid])
+
+
 
   const columns:TableColumn<ReviewDataRow>[] = [
     {
@@ -112,13 +127,29 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
     setReviews(userData.data.result.reviews);
   }, [data._id])
 
+  const handleCopyAuthToken = async () => {
+    try {
+      const authToken = await fetchAuthToken()
+
+      await navigator.clipboard.writeText(authToken)
+
+      setCopiedSuccess(true)
+    } catch (error) {
+      setCopiedSuccess(false)
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     handleFetchUserInformation()
   }, [handleFetchUserInformation])
 
   return (
     <div className="p-3">
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-end gap-4">
+      <Button onClick={handleCopyAuthToken} >Copy Auth Token</Button>
+      <Button onClick={() => setCreateWatchedMoviesModal(true)} >Create Watched</Button>
+      <Button onClick={() => setUpdateModal(true)} >UPDATE USER</Button>
       <Button 
         onClick={() => setConfirmModal(true)} 
         className="bg-red-600 hover:bg-red-700"
@@ -144,6 +175,24 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
         content="Once this action is completed it can NOT be undone."
         open={confirmModal}
       />
+      <UpdateUserDialog
+        open={updateModal}
+        onClose={() => setUpdateModal(false)}
+        onRefresh={handleFetchUserInformation}
+        data={data}
+      />
+      <CreateWatchedMoviesDialog
+        open={createWatchedMoviesModal}
+        onClose={() => setCreateWatchedMoviesModal(false)}
+        onRefresh={handleFetchUserInformation}
+        dataRow={data}
+      />
+      <Snackbar
+        open={copiedSuccess}
+        autoHideDuration={6000}
+        onClose={() => setCopiedSuccess(false)}
+        message="Copied Auth Token to Clipboard!"
+      />
     </div>
   )
 };
@@ -152,6 +201,7 @@ const Users: React.FC<Props> = ({data}: Props) => {
   const [selectedRows, setSelectedRows] = useState<any[]>([])
   const [confirmModal, setConfirmModal] = useState<boolean>(false)
   const [createModal, setCreateModal] = useState<boolean>(false)
+  const [createReviewModal, setCreateReviewModal] = useState<boolean>(false)
   const [currentData, setCurrentData] = useState<any[] | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -218,6 +268,9 @@ const Users: React.FC<Props> = ({data}: Props) => {
     <div>
       <h1 className="text-xl text-red-500" >Users</h1>
       <div className="flex w-full justify-end">
+        <Button onClick={() => setCreateReviewModal(true)}  disabled={!selectedRows.length} >
+          Create Review
+        </Button>
         <Button onClick={() => setCreateModal(true)}>
           Create User
         </Button>
@@ -252,6 +305,12 @@ const Users: React.FC<Props> = ({data}: Props) => {
         title={`You want to delete ${selectedRows.length} User(s)?`}
         content="Once this action is completed it can NOT be undone."
         open={confirmModal}
+      />
+      <CreateReviewDialog
+        open={createReviewModal}
+        onClose={() => setCreateReviewModal(false)}
+        onRefresh={fetchCurrentData}
+        selectedRows={selectedRows}
       />
     </div>
   )

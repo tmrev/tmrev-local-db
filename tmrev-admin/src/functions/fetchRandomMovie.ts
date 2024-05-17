@@ -4,8 +4,17 @@ require("dotenv").config();
 const BASE_URL = process.env.TMDB_BASE_URL
 const API_KEY = process.env.TMDB_API_KEY
 
-async function getRandomMovie() {
+async function getRandomMovie(movieId?: number) {
   try {
+    
+    // If movieId is provided, fetch the movie with the id
+    if(movieId) {
+      const movieUrl = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
+      const movieResponse = await fetch(movieUrl)
+      const movieData = await movieResponse.json()
+      return movieData
+    }
+  
     // Generate a random page number
     // Max page number is 500
     const randomPage = Math.floor(Math.random() * 500) + 1;
