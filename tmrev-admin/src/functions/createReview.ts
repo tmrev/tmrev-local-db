@@ -1,4 +1,4 @@
-import { fa, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { getRandomMovie } from'./fetchRandomMovie';
 import { initFirebase } from'./initFirebase'
 import { createIdTokenfromCustomToken }from'./exchangeCustomToken';
@@ -6,20 +6,6 @@ import { createIdTokenfromCustomToken }from'./exchangeCustomToken';
 type Genre = {
   id: number;
   name: string;
-};
-
-type MovieDetails = {
-  backdrop_path: string;
-  budget: number;
-  genres: Genre[];
-  id: number;
-  imdb_id: string;
-  original_language: string;
-  poster_path: string;
-  release_date: string;
-  revenue: number;
-  runtime: number;
-  title: string;
 };
 
 const createReview = async (uid: string, movieId?: number) => {
@@ -42,21 +28,7 @@ const createReview = async (uid: string, movieId?: number) => {
       visuals: faker.datatype.number({ min: 1, max: 10 })
     }
 
-    // const movieDetails: MovieDetails = {
-    //   backdrop_path: movie.backdrop_path || null,
-    //   budget: movie.budget || null,
-    //   genres: movie.genres || [],
-    //   id: movie.id,
-    //   imdb_id: movie.imdb_id || null,
-    //   original_language: movie.original_language || null,
-    //   poster_path: movie.poster_path || null,
-    //   release_date: movie.release_date || null,
-    //   revenue: movie.revenue || null,
-    //   runtime: movie.runtime || null,
-    //   title: movie.title || null
-    // }
-  
-    const review = {
+      const review = {
       tmdbID: movie.id,
       advancedScore,
       notes: faker.lorem.sentences(),
