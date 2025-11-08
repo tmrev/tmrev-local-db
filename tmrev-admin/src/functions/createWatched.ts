@@ -12,8 +12,6 @@ const createWatched = async (userId: string) => {
 
     const watchedMovieBody = {
       liked: faker.datatype.boolean(),
-      posterPath: movie.poster_path,
-      title: movie.title,
       tmdbID: movie.id,
     }
 
@@ -29,6 +27,8 @@ const createWatched = async (userId: string) => {
     })
 
     const data = await response.json()
+
+    console.log(data)
 
     return data
 
