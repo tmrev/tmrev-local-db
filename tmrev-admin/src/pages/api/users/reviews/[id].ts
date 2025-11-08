@@ -19,7 +19,7 @@ export default async function handler(
     const _id = new ObjectId(id as string)
 
     const user = await dbUser.findOne({_id});
-    const reviews = await dbReviews.find({user: new ObjectId(_id)}).toArray();
+    const reviews = await dbReviews.find({userId: user?.uuid}).toArray();
 
     res.status(200).json({result: {
       user,
