@@ -1,10 +1,14 @@
+import CreateAIReviewsDialog from "@/components/dialogs/createAiReviewDialog";
 import CreateReviewDialog from "@/components/dialogs/createReviewDialog";
+import CreateReviewsDialog from "@/components/dialogs/createReviewsDialog";
 import CreateUserDialog from "@/components/dialogs/createUserDialog";
 import CreateWatchedMoviesDialog from "@/components/dialogs/createWatchedMoviesDialog";
+import CreateWatchListDialog from "@/components/dialogs/createWatchListDialog";
 import DeleteWarningDialog from "@/components/dialogs/deleteWarningDialog";
 import UpdateUserDialog from "@/components/dialogs/updateUserDialog";
 import { Button, CircularProgress, Snackbar, TextField } from "@mui/material";
 import axios from "axios";
+import { create } from "domain";
 import React, { useCallback, useEffect, useState } from "react";
 import DataTable, { ExpanderComponentProps, TableColumn } from 'react-data-table-component';
 
@@ -41,11 +45,12 @@ type ReviewDataRow = {
     theme: number
     visuals: number
   }
+  movieDetails: {
+    id: number
+    title: string
+  }
   notes: string
   public: boolean
-  title: string
-  tmdbID: number
-  user: string
   userId: string
   votes: {
     upVote: string[]
@@ -62,6 +67,10 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
   const [updateModal, setUpdateModal] = useState<boolean>(false)
   const [copiedSuccess, setCopiedSuccess] = useState<boolean>(false)
   const [createWatchedMoviesModal, setCreateWatchedMoviesModal] = useState<boolean>(false)
+  const [createWatchList, setCreateWatchList] = useState<boolean>(false)
+  const [createReviews, setCreateReviews] = useState<boolean>(false)
+  const [createAiReviews, setCreateAiReviews] = useState<boolean>(false)
+
 
   const fetchAuthToken = useCallback(async () => {
     const token = await axios.get(`/api/auth/getAuthToken?uid=${data.uuid}`)
@@ -74,14 +83,14 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
   const columns:TableColumn<ReviewDataRow>[] = [
     {
       name: 'Title',
-      selector: (row) => row.title,
+      selector: (row) => row.movieDetails.title,
       cell: (row) => ( 
         <a 
         className="text-blue-500 hover:underline"
         target="_blank" 
-        href={`http://localhost:3000/movie/${row.tmdbID}`}
+        href={`http://localhost:3000/movie/${row.movieDetails.id}`}
         >
-          {row.title}
+          {row.movieDetails.title}
         </a>
       ),
       sortable: true,
@@ -149,6 +158,9 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
       <div className="w-full flex justify-end gap-4">
       <Button onClick={handleCopyAuthToken} >Copy Auth Token</Button>
       <Button onClick={() => setCreateWatchedMoviesModal(true)} >Create Watched</Button>
+      <Button onClick={() => setCreateAiReviews(true)} >Create Ai Review</Button>
+      <Button onClick={() => setCreateReviews(true)} >Create Review</Button>
+      <Button onClick={() => setCreateWatchList(true)} >Create Watch List</Button>
       <Button onClick={() => setUpdateModal(true)} >UPDATE USER</Button>
       <Button 
         onClick={() => setConfirmModal(true)} 
@@ -184,6 +196,24 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
       <CreateWatchedMoviesDialog
         open={createWatchedMoviesModal}
         onClose={() => setCreateWatchedMoviesModal(false)}
+        onRefresh={handleFetchUserInformation}
+        dataRow={data}
+      />
+      <CreateWatchListDialog
+        open={createWatchList}
+        onClose={() => setCreateWatchList(false)}
+        onRefresh={handleFetchUserInformation}
+        dataRow={data}
+      />
+      <CreateReviewsDialog
+        open={createReviews}
+        onClose={() => setCreateReviews(false)}
+        onRefresh={handleFetchUserInformation}
+        dataRow={data}
+      />
+      <CreateAIReviewsDialog
+        open={createAiReviews}
+        onClose={() => setCreateAiReviews(false)}
         onRefresh={handleFetchUserInformation}
         dataRow={data}
       />
