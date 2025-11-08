@@ -21,9 +21,17 @@ export default async function handler(
     try {
       const { uid, movieId } = req.body as Body
 
+      if(!movieId) {
+        const reviews = createReview(uid)
+  
+        res.status(200).json(reviews)
+      } else {
+        
       const reviews = createReview(uid, Number(movieId))
   
       res.status(200).json(reviews)
+      }
+
     } catch (error) {
       console.error(error)
     }
