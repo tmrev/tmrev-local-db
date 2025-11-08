@@ -67,7 +67,7 @@ const createReview = async (uid: string, movieId?: number) => {
 
     const token = await createIdTokenfromCustomToken(uid)
 
-   const response = await fetch(`${TMREV_BASE_URL}/movie/review`, {
+   const response = await fetch(`${TMREV_BASE_URL}/review`, {
       method: 'POST',
       body: JSON.stringify(review),
       headers: {
