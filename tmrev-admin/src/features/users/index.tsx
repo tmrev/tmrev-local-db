@@ -84,15 +84,19 @@ const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({ data }) 
     {
       name: 'Title',
       selector: (row) => row.movieDetails.title,
-      cell: (row) => ( 
-        <a 
-        className="text-blue-500 hover:underline"
-        target="_blank" 
-        href={`http://localhost:3000/movie/${row.movieDetails.id}`}
-        >
-          {row.movieDetails.title}
-        </a>
-      ),
+      cell: (row) => {
+        if(!row.movieDetails) return 'N/A'
+        return (
+          <a 
+            href={`https://www.themoviedb.org/movie/${row.movieDetails.id}`} 
+            target="_blank" 
+            rel="noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            {row.movieDetails.title}
+          </a>
+        )
+      },
       sortable: true,
       
     },
